@@ -1,12 +1,12 @@
 package com.garimper.controller;
 
-import java.io.IOException;
-
 import com.garimper.selenium.Bot;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import org.apache.commons.lang3.StringUtils;
 
 public class WindowController {
 
@@ -17,13 +17,25 @@ public class WindowController {
     private TextField txtKeyWords;
 
     @FXML
-    private Button btnGarimpar;
-
-    @FXML
     private Label lblStatus;
 
     @FXML
     public void onBtnGarimparAction() {
-        new Thread(() -> new Bot(txtOlxLink, txtKeyWords, lblStatus)).start();
+        if (isTextFieldEmpty(txtOlxLink) || isTextFieldEmpty(txtKeyWords)) {
+            System.out.println("Empty");
+        } else {
+            new Thread(() -> new Bot(txtOlxLink, txtKeyWords, lblStatus)).start();
+        }
+    }
+
+    @FXML
+    private void handleOnKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            onBtnGarimparAction();
+        }
+    }
+
+    private boolean isTextFieldEmpty(TextField textField) {
+        return StringUtils.isEmpty(textField.getText());
     }
 }
