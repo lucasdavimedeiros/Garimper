@@ -8,19 +8,19 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="235.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.garimper.controller.WindowController">
-   <TextField fx:id="txtOlxLink" layoutX="35.0" layoutY="55.0" onKeyPressed="#handleOnKeyPressed" prefHeight="25.0" prefWidth="470.0" promptText="https://olx.com.br/celulares" />
+   <TextField fx:id="txtOlxLink" layoutX="35.0" layoutY="55.0" prefHeight="25.0" prefWidth="470.0" promptText="https://olx.com.br/celulares" />
    <Label layoutX="35.0" layoutY="35.0" text="OLX Link">
       <font>
          <Font name="Arial" size="14.0" />
       </font>
    </Label>
-   <TextField fx:id="txtKeyWords" layoutX="35.0" layoutY="120.0" onKeyPressed="#handleOnKeyPressed" prefHeight="25.0" prefWidth="470.0" promptText="iphone x, galaxy s20" />
+   <TextField fx:id="txtKeyWords" layoutX="35.0" layoutY="120.0" prefHeight="25.0" prefWidth="470.0" promptText="iphone x, galaxy s20" />
    <Label layoutX="35.0" layoutY="100.0" text="Palavras-chave (separadas por vírgula)">
       <font>
          <Font name="Arial" size="14.0" />
       </font>
    </Label>
-   <Button layoutX="35.0" layoutY="170.0" mnemonicParsing="false" onAction="#onBtnGarimparAction" onKeyPressed="#handleOnKeyPressed" text="Garimpar">
+   <Button fx:id="btnGarimpar" defaultButton="true" layoutX="35.0" layoutY="170.0" mnemonicParsing="false" onAction="#onBtnGarimparAction" text="Garimpar">
       <font>
          <Font name="Arial" size="16.0" />
       </font>
@@ -28,7 +28,7 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </Button>
-   <Label fx:id="lblStatus" contentDisplay="CENTER" layoutX="150.0" layoutY="178.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="16.0" prefWidth="355.0">
+   <Label fx:id="lblStatus" contentDisplay="CENTER" layoutX="150.0" layoutY="178.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="16.0" prefWidth="355.0" style="-fx-border-widt: 2px;">
       <font>
          <Font name="Arial" size="14.0" />
       </font>

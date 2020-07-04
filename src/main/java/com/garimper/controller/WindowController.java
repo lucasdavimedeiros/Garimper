@@ -2,10 +2,9 @@ package com.garimper.controller;
 
 import com.garimper.selenium.Bot;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public class WindowController {
@@ -17,25 +16,29 @@ public class WindowController {
     private TextField txtKeyWords;
 
     @FXML
+    private Button btnGarimpar;
+
+    @FXML
     private Label lblStatus;
+
+    public void initialize() {
+        txtOlxLink.setFocusTraversable(false);
+        txtKeyWords.setFocusTraversable(false);
+        btnGarimpar.setDisable(true);
+        textFieldListenerToEnableOrDisableButton(txtOlxLink);
+        textFieldListenerToEnableOrDisableButton(txtKeyWords);
+    }
 
     @FXML
     public void onBtnGarimparAction() {
-        if (isTextFieldEmpty(txtOlxLink) || isTextFieldEmpty(txtKeyWords)) {
-            System.out.println("Empty");
-        } else {
-            new Thread(() -> new Bot(txtOlxLink, txtKeyWords, lblStatus)).start();
-        }
+        btnGarimpar.setDisable(true);
+        new Thread(() -> new Bot(txtOlxLink, txtKeyWords, lblStatus)).start();
     }
 
-    @FXML
-    private void handleOnKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-            onBtnGarimparAction();
-        }
-    }
-
-    private boolean isTextFieldEmpty(TextField textField) {
-        return StringUtils.isEmpty(textField.getText());
+    private void textFieldListenerToEnableOrDisableButton(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            boolean isAnyTextFieldEmpty = StringUtils.isEmpty(txtOlxLink.getText()) || StringUtils.isEmpty(txtKeyWords.getText());
+            btnGarimpar.setDisable(isAnyTextFieldEmpty);
+        });
     }
 }

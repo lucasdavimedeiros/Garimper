@@ -8,19 +8,21 @@ public class Util {
 	private static final String LEFT_TRIM_REGEX = "^\\s+";
 	private static final String RIGHT_TRIM_REGEX = "\\s+$";
 
-	public static String getFirefoxDriverPath() {
+	public static String getBrowserDriverPath(Browsers browser) {
 
 		String os = System.getProperty("os.name").toUpperCase();
 		String rootPath = System.getProperty("user.dir");
-		String driverPath = null;
+		String driverPath = "";
 
-		if (os.contains("WINDOWS")) {
+		if (browser == Browsers.FIREFOX){
+			if (os.contains("WINDOWS")) {
 
-			driverPath = rootPath + "/geckodriver.exe";
+				driverPath = rootPath + "/geckodriver.exe";
 
-		} else if (os.contains("MAC")) {
+			} else if (os.contains("MAC")) {
 
-			driverPath = rootPath + "/geckodriver";
+				driverPath = rootPath + "/geckodriver";
+			}
 		}
 		return driverPath;
 	}
