@@ -31,7 +31,7 @@ public class Bot {
     private String txtOlxLink;
     private String txtKeyWords;
     private Label lblStatus;
-    private int minutesSpinner;
+    private Spinner minutesSpinner;
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -39,15 +39,15 @@ public class Bot {
     private WebElement chatInputText;
     private ArrayList<String> tabs;
     private List<String> keyWordsList;
-    private List<String> filteredLinks = new ArrayList<>();
-    private List<String> sentLinks = new ArrayList<>();
-    private Map<String, String> map = new HashMap<>();
+    private final List<String> filteredLinks = new ArrayList<>();
+    private final List<String> sentLinks = new ArrayList<>();
+    private final Map<String, String> map = new HashMap<>();
 
     public Bot(TextField txtOlxLink, TextField txtKeyWords, Label lblStatus, Spinner minutesSpinner) {
         this.txtOlxLink = txtOlxLink.getText();
         this.txtKeyWords = txtKeyWords.getText();
         this.lblStatus = lblStatus;
-        this.minutesSpinner = (int) minutesSpinner.getValue();
+        this.minutesSpinner = minutesSpinner;
 
         prepareToWatchPage();
         initPageWatcher();
@@ -67,6 +67,7 @@ public class Bot {
         waitUntilSearchInputTextIsVisible();
         setGUIStatusLabel(lblStatus, "Selecione o contato e escreva '#OK' na caixa de texto da conversa");
         waitUntilChatInputTextIsVisible();
+
         waitUserWriteInChatInputText();
         writeTimerInChatInputText();
         setGUIStatusLabel(getLblStatus(), "Acessando OLX");
@@ -79,23 +80,46 @@ public class Bot {
         while (true) {
             List<WebElement> adsTitleElements = getAdsTitleElementsFromFirstPage();
             filterResults(adsTitleElements);
-
-            for (Map.Entry<String, String> mapItem : map.entrySet()) {
-                if (!sentLinks.contains(mapItem.getKey())) {
-                    switchToWhatsAppTab();
-                    sentLinks.add(mapItem.getKey());
-                    chatInputText.sendKeys(mapItem.getKey());
-                    waitUntilLinkPreviewIsVisible();
-                    pasteLinkInChatTextField();
-                    waitUntilLinkPreviewIsNotVisible();
-                    chatInputText.sendKeys(mapItem.getValue());
-                    pasteLinkInChatTextField();
-                }
-            }
+            sendResultsToWhatsApp();
             switchToOlxTab();
-            sleepInMinutes(minutesSpinner);
+            sleepInMinutes(getMinutesFromSpinner());
             refreshPage();
         }
+    }
+
+    private int getMinutesFromSpinner() {
+        return (int) minutesSpinner.getValue();
+    }
+
+    private void sendResultsToWhatsApp() {
+        for (Map.Entry<String, String> mapItem : map.entrySet()) {
+            if (!isAdSent(mapItem)) {
+                switchToWhatsAppTab();
+                sendAdLink(mapItem);
+                sendAdPrice(mapItem);
+                addAdToSentList(mapItem);
+            }
+        }
+    }
+
+    private boolean isAdSent(Map.Entry<String, String> mapItem) {
+        return sentLinks.contains(mapItem.getKey());
+    }
+
+    private void addAdToSentList(Map.Entry<String, String> mapItem) {
+        sentLinks.add(mapItem.getKey());
+    }
+
+    private void sendAdPrice(Map.Entry<String, String> mapItem) {
+        waitUntilLinkPreviewIsNotVisible();
+        chatInputText.sendKeys("*" + mapItem.getValue() + "*");
+        chatInputText.sendKeys(Keys.ENTER);
+    }
+
+    private void sendAdLink(Map.Entry<String, String> mapItem) {
+        chatInputText.sendKeys(mapItem.getKey());
+        waitUntilLinkPreviewIsVisible();
+        chatInputText.sendKeys(Keys.ENTER);
     }
 
     private void refreshPage() {
@@ -104,10 +128,6 @@ public class Bot {
 
     private void switchToOlxTab() {
         driver.switchTo().window(tabs.get(1));
-    }
-
-    private void pasteLinkInChatTextField() {
-        chatInputText.sendKeys(Keys.ENTER);
     }
 
     private void waitUntilLinkPreviewIsNotVisible() {
@@ -230,9 +250,7 @@ public class Bot {
     }
 
     private void setGUIStatusLabel(Label label, String text) {
-        Platform.runLater(() -> {
-            label.setText(text);
-        });
+        Platform.runLater(() -> label.setText(text));
     }
 
     private void sleepInSeconds(int seconds) {
