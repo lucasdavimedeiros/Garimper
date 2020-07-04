@@ -6,26 +6,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
 public class App extends Application {
 
-    private static Scene scene;
-
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("window.fxml"));
+        Scene scene = new Scene(loadFXML());
         stage.setScene(scene);
         stage.setTitle("Garimper");
         stage.getIcons().add(new Image(App.class.getResource("olx-logo.png").toString()));
-        stage.setAlwaysOnTop(true);
         stage.setResizable(false);
         stage.show();
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
+    private static Parent loadFXML() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("window.fxml"));
         return fxmlLoader.load();
     }
 

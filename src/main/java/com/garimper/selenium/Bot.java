@@ -2,6 +2,7 @@ package com.garimper.selenium;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -30,6 +31,7 @@ public class Bot {
     private String txtOlxLink;
     private String txtKeyWords;
     private Label lblStatus;
+    private int minutesSpinner;
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -41,10 +43,11 @@ public class Bot {
     private List<String> sentLinks = new ArrayList<>();
     private Map<String, String> map = new HashMap<>();
 
-    public Bot(TextField txtOlxLink, TextField txtKeyWords, Label lblStatus) {
+    public Bot(TextField txtOlxLink, TextField txtKeyWords, Label lblStatus, Spinner minutesSpinner) {
         this.txtOlxLink = txtOlxLink.getText();
         this.txtKeyWords = txtKeyWords.getText();
         this.lblStatus = lblStatus;
+        this.minutesSpinner = (int) minutesSpinner.getValue();
 
         prepareToWatchPage();
         initPageWatcher();
@@ -90,7 +93,7 @@ public class Bot {
                 }
             }
             switchToOlxTab();
-            sleepInSeconds(5);
+            sleepInMinutes(minutesSpinner);
             refreshPage();
         }
     }

@@ -4,6 +4,8 @@ import com.garimper.selenium.Bot;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +21,9 @@ public class WindowController {
     private Button btnGarimpar;
 
     @FXML
+    private Spinner minutesSpinner;
+
+    @FXML
     private Label lblStatus;
 
     public void initialize() {
@@ -27,12 +32,16 @@ public class WindowController {
         btnGarimpar.setDisable(true);
         textFieldListenerToEnableOrDisableButton(txtOlxLink);
         textFieldListenerToEnableOrDisableButton(txtKeyWords);
+        SpinnerValueFactory<Integer> minutes = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 60);
+        minutesSpinner.setValueFactory(minutes);
+        minutesSpinner.setFocusTraversable(false);
     }
 
     @FXML
     public void onBtnGarimparAction() {
         btnGarimpar.setDisable(true);
-        new Thread(() -> new Bot(txtOlxLink, txtKeyWords, lblStatus)).start();
+        Runnable thread = () -> new Bot(txtOlxLink, txtKeyWords, lblStatus, minutesSpinner);
+        new Thread(thread).start();
     }
 
     private void textFieldListenerToEnableOrDisableButton(TextField textField) {
