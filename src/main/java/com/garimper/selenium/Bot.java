@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -112,8 +113,13 @@ public class Bot {
 
     private void sendAdPrice(Map.Entry<String, String> mapItem) {
         waitUntilLinkPreviewIsNotVisible();
-        chatInputText.sendKeys("*" + mapItem.getValue() + "*");
+        String price = mapItem.getValue();
+        chatInputText.sendKeys("*" + checkIfPriceIsBlank(price) + "*");
         chatInputText.sendKeys(Keys.ENTER);
+    }
+
+    private String checkIfPriceIsBlank(String price) {
+        return StringUtils.isBlank(price) ? "Sem preço no anúncio" : price;
     }
 
     private void sendAdLink(Map.Entry<String, String> mapItem) {
