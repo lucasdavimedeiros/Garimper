@@ -286,7 +286,4 @@ public class Bot {
     public Label getLblStatus() {
         return lblStatus;
     }
-
-    private Bot() {
-    }
 }

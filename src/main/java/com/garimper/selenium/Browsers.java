@@ -4,13 +4,13 @@ public enum Browsers {
 
     FIREFOX("webdriver.gecko.driver");
 
-    private String value;
+    private final String value;
 
     public String getValue() {
         return value;
     }
 
-    private Browsers(String value) {
+    Browsers(String value) {
         this.value = value;
     }
 }
